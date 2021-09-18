@@ -1,0 +1,21 @@
+[
+    {
+        "id": "dasldaskl123213",
+        "class": "1A"
+    },
+    {
+        "id": "dasdasd23ei23423",
+        "classId": "dasldaskl123213",
+        "studentName": "Jamil Ahmed"
+    },
+    {
+        "Time": "3:25",
+        "studentId": "dasdasd23ei23423",
+    },
+    {
+        "classId": "dasldaskl123213",
+        "studentId": "dasdasd23ei23423",
+        "Time": "3:25",
+        "Attendence": "P"
+    }
+]
