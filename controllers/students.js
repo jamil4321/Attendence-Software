@@ -17,11 +17,11 @@ exports.getAllStudents = async (req, res) => {
   });
 };
 exports.newStudent = async (req, res) => {
-  const { name } = req.body;
-  let data = { id: uuidv4(), studentName: name };
+  const { name, classRoom } = req.body;
+  let data = { id: uuidv4(), studentName: name, department: classRoom };
 
   await db.connection.query(
-    `INSERT INTO students (id,studentName) VALUES ("${data.id}","${data.studentName}");`,
+    `INSERT INTO students (id,studentName,departmentName) VALUES ("${data.id}","${data.studentName}","${data.department}");`,
     async (err, results) => {
       if (err) {
         console.log(err);

@@ -1,32 +1,7 @@
 const Attendence = require("../models/attendence");
 const Students = require("../models/student");
-const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 const db = require("../db/connectDB");
 
-const csvWriter = createCsvWriter({
-  path: "out.csv",
-  header: [
-    { id: "AcNo", title: "Ac-No" },
-    { id: "Name", title: "Name" },
-    { id: "sTime", title: "sTime" },
-    { id: "VerifyMode", title: "Verify Mode" },
-    { id: "Machine", title: "Machine" },
-    { id: "Exception", title: "Exception" },
-    { id: "checktype", title: "checktype" },
-    { id: "sensorid", title: "sensorid" },
-    { id: "workcode", title: "workcode" },
-    { id: "sDate", title: "sDate" },
-  ],
-});
-// const csvWriter = createCsvWriter({
-//   path: 'out.csv',
-//   header: [
-//     {id: 'name', title: 'Name'},
-//     {id: 'surname', title: 'Surname'},
-//     {id: 'age', title: 'Age'},
-//     {id: 'gender', title: 'Gender'},
-//   ]
-// });
 const pad = (num) => {
   return ("00" + num).slice(-2);
 };
@@ -119,13 +94,13 @@ exports.markAttendence = async (req, res) => {
               if (results.length > 0) {
                 console.log(results[0]);
                 await db.connection.query(
-                  `INSERT INTO attendence (studentId,studentName,Attendence) VALUES ("${studentID}","${results[0].studentName}","P")`,
-                  async (err, results) => {
+                  `INSERT INTO attendence (studentId,studentName,Attendence,departmentName) VALUES ("${studentID}","${results[0].studentName}","P","${results[0].departmentName}")`,
+                  async (err, resu) => {
                     if (err) {
                       return res.json({ message: "Error" + err });
                     }
                     await db.connection.query(
-                      `INSERT INTO studentlogs (studentId,studentName,camera) VALUES ("${studentID}","${results[0].studentName}","${cameraID}")`,
+                      `INSERT INTO studentlogs (studentId,studentName,camera,departmentName) VALUES ("${studentID}","${results[0].studentName}","${cameraID}","${results[0].departmentName}")`,
                       async (err, results) => {
                         if (err) {
                           return res.json({ message: "Error" + err });
@@ -145,7 +120,7 @@ exports.markAttendence = async (req, res) => {
           );
         } else {
           await db.connection.query(
-            `INSERT INTO studentlogs (studentId,studentName,camera) VALUES ("${studentID}","${results[0].studentName}","${cameraID}")`,
+            `INSERT INTO studentlogs (studentId,studentName,camera,departmentName) VALUES ("${studentID}","${results[0].studentName}","${cameraID}","${results[0].departmentName}")`,
             async (err, results) => {
               if (err) {
                 return res.json({ message: "Error" + err });
@@ -164,14 +139,15 @@ exports.markAttendence = async (req, res) => {
             }
             if (results.length > 0) {
               let dateTime = new Date();
+              console.log(results);
               await db.connection.query(
-                `INSERT INTO attendence (studentId,studentName,Attendence) VALUES ("${results[0].id}","${results[0].studentName}","P")`,
+                `INSERT INTO attendence (studentId,studentName,Attendence,departmentName) VALUES ("${results[0].id}","${results[0].studentName}","P","${results[0].departmentName}")`,
                 async (err, resul) => {
                   if (err) {
                     return res.json({ message: "Error" + err });
                   }
                   await db.connection.query(
-                    `INSERT INTO studentlogs (studentId,studentName,camera) VALUES ("${studentID}","${results[0].studentName}","${cameraID}")`,
+                    `INSERT INTO studentlogs (studentId,studentName,camera,departmentName) VALUES ("${studentID}","${results[0].studentName}","${cameraID}","${results[0].departmentName}")`,
                     async (err, results) => {
                       if (err) {
                         return res.json({ message: "Error" + err });

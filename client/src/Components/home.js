@@ -19,6 +19,7 @@ import InboxIcon from "@material-ui/icons/MoveToInbox";
 import AddStudent from "./setting/AddStudent";
 import ViewStudentsLogs from "./viewStudentsLogs/viewStudentsLogs";
 import ViewAttendance from "./attendence/ViewAttendance";
+import AddClassRoom from "./setting/AddClassRoom";
 import { useDispatch, useSelector } from "react-redux";
 
 const drawerWidth = 240;
@@ -99,12 +100,12 @@ export default function Home() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  // React.useEffect(() => {
-  //   const func = async () => {
-  //     await getClassRooms();
-  //   };
-  //   func();
-  // }, []);
+  React.useEffect(() => {
+    const func = async () => {
+      await getClassRooms();
+    };
+    func();
+  }, []);
   React.useEffect(() => {
     const func = async () => {
       await getAllStudent();
@@ -126,20 +127,20 @@ export default function Home() {
     console.log(data);
     dispatch({ type: "GETSTUDENT", payload: data });
   };
-  // const getClassRooms = async () => {
-  //   let data = await fetch("http://localhost:2000/api/getAllClassRoom", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: "Bearer " + accessToken,
-  //     },
-  //   })
-  //     .then((res) => res.json())
-  //     .then((data) => data)
-  //     .catch((err) => console.log(err));
-  //   console.log(data);
-  //   dispatch({ type: "GETCLASSROOM", payload: data });
-  // };
+  const getClassRooms = async () => {
+    let data = await fetch("http://localhost:2000/api/getAllClassRoom", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + accessToken,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => data)
+      .catch((err) => console.log(err));
+    console.log(data);
+    dispatch({ type: "GETCLASSROOM", payload: data });
+  };
 
   return (
     <div className={classes.root}>
@@ -211,12 +212,12 @@ export default function Home() {
             </ListItemIcon>
             <ListItemText primary={"Add / View Students"} />
           </ListItem>
-          {/* <ListItem button onClick={() => setDrawerItem("classRoom")}>
+          <ListItem button onClick={() => setDrawerItem("classRoom")}>
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
-            <ListItemText primary={"Add / View Class Rooms"} />
-          </ListItem> */}
+            <ListItemText primary={"Add / View Department"} />
+          </ListItem>
         </List>
       </Drawer>
       <main
@@ -227,7 +228,8 @@ export default function Home() {
         <div className={classes.drawerHeader} />
         {(drawerItem === "Students" && <AddStudent />) ||
           (drawerItem === "ViewAttendance" && <ViewAttendance />) ||
-          (drawerItem === "ViewStudentsLogs" && <ViewStudentsLogs />)}
+          (drawerItem === "ViewStudentsLogs" && <ViewStudentsLogs />) ||
+          (drawerItem === "classRoom" && <AddClassRoom />)}
       </main>
     </div>
   );

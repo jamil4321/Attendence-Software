@@ -23,12 +23,16 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import { useDispatch, useSelector } from "react-redux";
 import Socket from "../../socket/socket";
+import * as FileSaver from "file-saver";
+import * as XLSX from "xlsx";
 import {
   CountStudents,
   CountPresentStudent,
   CountAbsentStudent,
   PresentToday,
   AbsentToday,
+  MostAbsentInUniversity,
+  MostPresentsInUniversity,
 } from "../Chart/CountStudents";
 
 const useStyles = makeStyles((theme) => ({
@@ -66,6 +70,17 @@ const ViewAttendance = () => {
       };
     }
   );
+  const fileType =
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+  const fileExtension = ".xlsx";
+
+  const exportToCSV = (csvData, fileName) => {
+    const ws = XLSX.utils.json_to_sheet(csvData);
+    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const data = new Blob([excelBuffer], { type: fileType });
+    FileSaver.saveAs(data, fileName + fileExtension);
+  };
 
   React.useEffect(() => {
     const func = async () => {
@@ -127,10 +142,10 @@ const ViewAttendance = () => {
     <div>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <Grid container justify="space-around" alignItems="center">
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={2}>
             <FormControl variant="outlined" fullWidth>
               <InputLabel id="demo-simple-select-outlined-label">
-                Select Class Room
+                Select Department Room
               </InputLabel>
               <Select
                 labelId="demo-simple-select-outlined-label"
@@ -142,8 +157,8 @@ const ViewAttendance = () => {
                 <MenuItem value="All">---All---</MenuItem>
                 {classRoom.length > 0
                   ? classRoom.map((data) => (
-                      <MenuItem key={data.id} value={data.classRoomName}>
-                        {data.classRoomName}
+                      <MenuItem key={data.id} value={data.department}>
+                        {data.department}
                       </MenuItem>
                     ))
                   : null}
@@ -172,7 +187,7 @@ const ViewAttendance = () => {
               "aria-label": "change date",
             }}
           />
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={2}>
             <Button
               type="submit"
               fullWidth
@@ -181,6 +196,19 @@ const ViewAttendance = () => {
               onClick={getAttendence}
             >
               Show Data
+            </Button>
+          </Grid>
+          <Grid item xs={12} sm={6} md={2}>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                exportToCSV(attendence, "Attendence");
+              }}
+            >
+              Excel Export
             </Button>
           </Grid>
         </Grid>
@@ -215,8 +243,8 @@ const ViewAttendance = () => {
                 isSameDayfunc={isSameDay}
               />
             ) : null}
-          </Grid> */}
-          {/* <Grid item xs={12} sm={12} md={5}>
+          </Grid>
+          <Grid item xs={12} sm={12} md={5}>
             {endDate > startDate && buttonCliked === true ? (
               <MostAbsentInUniversity
                 classRoom={selectClassRoom}

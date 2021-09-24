@@ -42,27 +42,27 @@ const AddClassRoom = () => {
     setOpen(false);
   };
   const classes = useStyles();
-  // React.useEffect(() => {
-  //   const func = async () => {
-  //     await getClassRooms();
-  //   };
-  //   func();
-  // }, []);
+  React.useEffect(() => {
+    const func = async () => {
+      await getClassRooms();
+    };
+    func();
+  }, []);
 
-  // const getClassRooms = async () => {
-  //   let data = await fetch("http://localhost:2000/api/getAllClassRoom", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: "Bearer " + accessToken,
-  //     },
-  //   })
-  //     .then((res) => res.json())
-  //     .then((data) => data)
-  //     .catch((err) => console.log(err));
-  //   console.log(data);
-  //   dispatch({ type: "GETCLASSROOM", payload: data });
-  // };
+  const getClassRooms = async () => {
+    let data = await fetch("http://localhost:2000/api/getAllClassRoom", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + accessToken,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => data)
+      .catch((err) => console.log(err));
+    console.log(data);
+    dispatch({ type: "GETCLASSROOM", payload: data });
+  };
   console.log(classRoom);
   return (
     <div
@@ -86,29 +86,16 @@ const AddClassRoom = () => {
           <TableHead>
             <TableRow>
               <TableCell>Sr No.</TableCell>
-              <TableCell>Class Name</TableCell>
-              <TableCell align="right">Action Button</TableCell>
+              <TableCell>Department Name</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {/* <TableRow>
-                <TableCell>1</TableCell>
-                <TableCell component="th" scope="row">
-                  1 A
-                </TableCell>
-                <TableCell align="right">
-                  <Button>View</Button>
-                </TableCell>
-              </TableRow> */}
             {classRoom.length > 0
               ? classRoom.map((data, i) => (
                   <TableRow key={data.id}>
                     <TableCell>{i + 1}</TableCell>
                     <TableCell component="th" scope="row">
-                      {data.classRoomName}
-                    </TableCell>
-                    <TableCell align="right">
-                      <Button onClick={() => {}}>View</Button>
+                      {data.department}
                     </TableCell>
                   </TableRow>
                 ))

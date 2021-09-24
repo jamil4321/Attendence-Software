@@ -101,8 +101,8 @@ const AddStudent = () => {
           <TableHead>
             <TableRow>
               <TableCell>Sr No.</TableCell>
-              {/* <TableCell>Student Picture</TableCell> */}
               <TableCell>Student Name</TableCell>
+              <TableCell>Departname</TableCell>
               <TableCell align="right">Action Button</TableCell>
             </TableRow>
           </TableHead>
@@ -115,7 +115,9 @@ const AddStudent = () => {
                       <TableCell component="th" scope="row">
                         {data.studentName}
                       </TableCell>
-
+                      <TableCell component="th" scope="row">
+                        {data.departmentName}
+                      </TableCell>
                       <TableCell align="right">
                         <Button
                           variant="contained"

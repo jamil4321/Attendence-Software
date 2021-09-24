@@ -41,28 +41,28 @@ const DialogForm = (props) => {
   React.useEffect(() => {
     props.open ? setOpen(true) : setOpen(false);
   });
-  // React.useEffect(() => {
-  //   const func = async () => {
-  //     await getClassRooms();
-  //   };
-  //   func();
-  // }, []);
-  // console.log(classRoom);
+  React.useEffect(() => {
+    const func = async () => {
+      await getClassRooms();
+    };
+    func();
+  }, []);
+  console.log(classRoom);
 
-  // const getClassRooms = async () => {
-  //   let data = await fetch("http://localhost:2000/api/getAllClassRoom", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: "Bearer " + accessToken,
-  //     },
-  //   })
-  //     .then((res) => res.json())
-  //     .then((data) => data)
-  //     .catch((err) => console.log(err));
-  //   console.log(data);
-  //   dispatch({ type: "GETCLASSROOM", payload: data });
-  // };
+  const getClassRooms = async () => {
+    let data = await fetch("http://localhost:2000/api/getAllClassRoom", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + accessToken,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => data)
+      .catch((err) => console.log(err));
+    console.log(data);
+    dispatch({ type: "GETCLASSROOM", payload: data });
+  };
   const addClassRoom = async (e) => {
     console.log("Clicked");
     e.preventDefault();
@@ -106,7 +106,7 @@ const DialogForm = (props) => {
       if (data && data.message === "Student Added") {
         dispatch({ type: "ADDSTUDENT", payload: data });
         handleClose();
-        // setClassRoomName("");
+        setClassRoomName("");
         setStudentName("");
       } else {
         handleClose();
@@ -122,6 +122,7 @@ const DialogForm = (props) => {
             open={open}
             onClose={handleClose}
             aria-labelledby="form-dialog-title"
+            fullWidth
           >
             <DialogTitle id="form-dialog-title">Add ClassRoom</DialogTitle>
             <DialogContent>
@@ -130,9 +131,9 @@ const DialogForm = (props) => {
                 margin="normal"
                 required
                 fullWidth
-                id="ClassRoom"
-                label="Add Class Room"
-                name="Add Class Room"
+                id="Department"
+                label="Add Department"
+                name="Add Department"
                 value={classRoomName}
                 onChange={(e) => setClassRoomName(e.target.value)}
               />
@@ -145,7 +146,7 @@ const DialogForm = (props) => {
                 color="primary"
                 onClick={(e) => addClassRoom(e)}
               >
-                Add Class Room
+                Add Department
               </Button>
             </DialogActions>
           </Dialog>
@@ -171,29 +172,29 @@ const DialogForm = (props) => {
                   value={studentName}
                   onChange={(e) => setStudentName(e.target.value)}
                 />
-                {/* <FormControl variant="outlined" fullWidth>
+                <FormControl variant="outlined" fullWidth>
                   <InputLabel id="demo-simple-select-outlined-label">
-                    Select Class Room
+                    Select Department
                   </InputLabel>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
                     value={selectClassRoom}
                     onChange={(e) => setSelectClassRoom(e.target.value)}
-                    label="Select Class Room"
+                    label="Select Department"
                   >
                     <MenuItem value="">
                       <em>None</em>
                     </MenuItem>
                     {classRoom.length > 0
                       ? classRoom.map((data) => (
-                          <MenuItem key={data.id} value={data.classRoomName}>
-                            {data.classRoomName}
+                          <MenuItem key={data.id} value={data.department}>
+                            {data.department}
                           </MenuItem>
                         ))
                       : null}
                   </Select>
-                </FormControl> */}
+                </FormControl>
               </DialogContent>
               <DialogActions>
                 <Button

@@ -66,6 +66,10 @@ const createTables = () => {
                           Attendence varchar(255) not null,
                           timeDate DATETIME not null
                       )`);
+  queryForTable(`create table if not exists department(
+                          id int primary key auto_increment,
+                          department varchar(255)not null
+                      )`);
 };
 createTables();
 module.exports = { connection };

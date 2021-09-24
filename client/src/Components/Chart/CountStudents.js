@@ -26,7 +26,7 @@ export const CountStudents = (props) => {
   const filterStudent = students.filter((data) => {
     if (props.classRoom === "All") {
       return data;
-    } else if (data.classRoom === props.classRoom) {
+    } else if (data.departmentName === props.classRoom) {
       return data;
     }
   });
@@ -73,11 +73,17 @@ export const CountPresentStudent = (props) => {
         let attDate = new Date(att.timeDate.split("T")[0]);
         console.log(attDate, "attendence Date");
         let check = props.isSameDayfunc(attDate, date);
-        console.log(check);
         if (check === true) {
-          if (data.id === att.studentId) {
-            dataCount = dataCount + 1;
-            console.log(dataCount);
+          if (props.classRoom === "All") {
+            if (data.id === att.studentId) {
+              dataCount = dataCount + 1;
+              console.log(dataCount);
+            }
+          } else if (data.departmentName === props.classRoom) {
+            if (data.id === att.studentId) {
+              dataCount = dataCount + 1;
+              console.log(dataCount);
+            }
           }
         }
       }
@@ -111,6 +117,13 @@ export const CountAbsentStudent = (props) => {
   let dataCount = 0;
   console.log("Absent count", attendence);
   const filterStudent = students.filter((data) => {
+    if (props.classRoom === "All") {
+      return data;
+    } else if (data.departmentName === props.classRoom) {
+      return data;
+    }
+  });
+  students.filter((data) => {
     attendence.map((att) => {
       let date1 = props.startDate;
       let date2 = props.endDate;
@@ -125,7 +138,7 @@ export const CountAbsentStudent = (props) => {
         let check = props.isSameDayfunc(attDate, date);
         if (check === true) {
           console.log(data.id, att.studentId);
-          if (data.id !== att.studentId) {
+          if (data.id === att.studentId) {
             dataCount = dataCount + 1;
           }
         }
@@ -146,7 +159,7 @@ export const CountAbsentStudent = (props) => {
         <Typography variant="h5">
           <Countup
             start={0}
-            end={dataCount === 0 ? 0 : students.length - dataCount}
+            end={Math.abs(filterStudent.length - dataCount)}
             duration={2.5}
             separator=","
           />
@@ -186,7 +199,7 @@ export const MostPresentsInUniversity = (props) => {
       return b.count - a.count;
     })
     .slice(0, 4);
-  console.logs(studentName);
+  console.log(studentName);
   return (
     <Card style={{ textAlign: "center" }}>
       <CardContent>
@@ -198,7 +211,7 @@ export const MostPresentsInUniversity = (props) => {
         {studentName.length > 0 && (
           <Doughnut
             data={{
-              labels: studentName.map((data) => data.studenName),
+              labels: studentName.map((data) => data.studentName),
               datasets: [
                 {
                   data: studentName.map((data) => data.count),
@@ -310,7 +323,7 @@ export const MostAbsentInUniversity = (props) => {
           <Doughnut
             data={{
               labels: absentStudents.map(
-                (data) => data.studenName || data.name
+                (data) => data.studentName || data.name
               ),
               datasets: [
                 {
@@ -356,22 +369,28 @@ export const PresentToday = (props) => {
     };
   });
   let Students = [];
-  console.log("attendence count", attendence);
-  students.filter((data) => {
+  const filterStudent = students.filter((data) => {
+    if (props.classRoom === "All") {
+      return data;
+    } else if (data.departmentName === props.classRoom) {
+      return data;
+    }
+  });
+  filterStudent.filter((data) => {
     attendence.map((att) => {
       let attDate = new Date(att.timeDate.split("T")[0]);
       let check = props.isSameDayfunc(attDate, new Date());
       if (check === true) {
-        if (props.classRoom === "All") {
-          if (data.id === att.studentId) {
-            Students.push(att);
-          }
-        } else if (
-          props.classRoom === data.classRoom &&
-          data.id === att.studentId
-        ) {
+        // if (props.classRoom === "All") {
+        if (data.id === att.studentId) {
           Students.push(att);
         }
+        // } else if (
+        //   props.classRoom === data.classRoom &&
+        //   data.id === att.studentId
+        // ) {
+        //   Students.push(att);
+        // }
       }
     });
   });
@@ -409,23 +428,61 @@ export const AbsentToday = (props) => {
   let Students = [];
   let newStudents = [];
   console.log("attendence count", attendence);
-  students.filter((data) => {
-    if (attendence.length > 0) {
-      attendence.map((att) => {
+  const filterStudent = students.filter((data) => {
+    if (props.classRoom === "All") {
+      return data;
+    } else if (data.departmentName === props.classRoom) {
+      return data;
+    }
+  });
+  // filterStudent.filter((data) => {
+  //   if (attendence.length > 0) {
+  //     attendence.map((att) => {
+  //       let attDate = new Date(att.timeDate.split("T")[0]);
+  //       let check = props.isSameDayfunc(attDate, new Date());
+  //       if (check === true) {
+  //         if (att.studentId !== data.id) {
+  //           let check = false;
+  //           if (newStudents.length > 0) {
+  //             newStudents.map((n) => {
+  //               if (n.id === data.id) {
+  //                 check = true;
+  //               } else {
+  //                 check = false;
+  //               }
+  //             });
+  //             if (check === false) {
+  //               newStudents.push(data);
+  //             }
+  //           } else {
+  //             newStudents.push(data);
+  //           }
+  //         }
+  //       }
+  //     });
+  //   } else {
+  //     newStudents.push(data);
+  //   }
+  // });
+  const test = filterStudent.filter(
+    (std) =>
+      !attendence.find((att) => {
         let attDate = new Date(att.timeDate.split("T")[0]);
         let check = props.isSameDayfunc(attDate, new Date());
         if (check === true) {
-          if (att.studentId !== data.id) {
-            console.log(data);
-            newStudents.push(data);
-          }
+          return att.studentId === std.id;
         }
-      });
-    } else {
-      newStudents.push(data);
-    }
-  });
-  console.log(newStudents, "filter abcent today");
+      })
+  );
+
+  Students = new Set([...newStudents]);
+  Students = Array.from(Students);
+  console.log(
+    newStudents,
+    "filter New Check today",
+    newStudents.length,
+    Students
+  );
   return (
     <>
       <Card style={{ textAlign: "center" }}>
@@ -435,8 +492,8 @@ export const AbsentToday = (props) => {
               ? "Students Abcent Today in University"
               : "Students Present Today in ClassRoom"}
           </Typography>
-          {students.length !== newStudents.length &&
-            newStudents.map((data, i) => (
+          {test.length > 0 &&
+            test.map((data, i) => (
               <ListItem button>
                 <ListItemText
                   primary={`${i + 1} ${data.studentName}`}
